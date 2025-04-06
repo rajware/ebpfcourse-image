@@ -98,6 +98,7 @@ build {
     scripts = [
       "buildscripts/10-setup-dev-env.sh",
       "buildscripts/20-set-hostname.sh",
+      "buildscripts/30-vbox-set-login-background.sh",
       "buildscripts/40-stamp-release.sh",
       "buildscripts/50-pre-compact.sh"
     ]
