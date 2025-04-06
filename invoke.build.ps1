@@ -22,7 +22,7 @@ task . {
 }
 
 # Synopsis: Build VirtualBox image
-task vbox -Outputs "output-bhringa-vbox/Bhringa-$($VersionString).ova" -Inputs bhringa-vbox.pkr.hcl, {
+task vbox { #-Outputs output-bhringa-vbox\Bhringa-$($VersionString).ova -Inputs bhringa-vbox.pkr.hcl, {
     exec {
         packer build `
             -var "source-path=$MatsyaSourcePath" `
@@ -35,7 +35,6 @@ task vbox -Outputs "output-bhringa-vbox/Bhringa-$($VersionString).ova" -Inputs b
 
 # Synopsis: Build HyperV image
 task hyperv  { #-Outputs "output-bhringa-hyperv/bhringa-hyperv.zip" -Inputs bhringa-hyperv.pkr.hcl, {
-    Write-Debug "DEBUGGGG"
     exec {
         packer build `
             -var "source-path=$MatsyaSourcePath" `
