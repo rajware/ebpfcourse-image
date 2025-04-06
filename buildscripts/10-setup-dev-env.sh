@@ -19,5 +19,8 @@ apk add bpftool
 echo "Adding iproute2..."
 apk add iproute2 iproute2-doc
 
+echo "Adding ethtool..."
+apk add ethtool
+
 echo "Installing development tools"
-apk add make git codeblocks codeblocks-contrib
+apk add make git geany
