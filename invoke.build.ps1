@@ -14,6 +14,7 @@ Bhringa Image version $VersionString
 
 Matsya base image: $MatsyaSourcePath
 "@
+$env:VM_DESCRIPTION = $VMDescription
 
 # Synopsis: Show usage
 task . {
@@ -24,12 +25,11 @@ task . {
 task vbox -Outputs "output-bhringa-vbox/Bhringa-$($VersionString).ova" -Inputs bhringa-vbox.pkr.hcl, {
     exec {
         packer build `
-            -only=matsya-vm.virtualbox-iso.matsya-vbox `
-            -var "iso-url=$($OSISOPath)" `
-            -var "iso-checksum=$($OSISOChecksum)" `
-            -var "vm-version=$($VersionString)" `
-            -var "vm-description=$($VMDescription)" `
-            matsya-vbox.pkr.hcl
+            -var "source-path=$MatsyaSourcePath" `
+            -var "root-certificate=$MatsyaKeyPairPath" `
+            -var "vm-version=$VersionString" `
+            -var "vm-description=$$VM_DESCRIPTION" `
+            bhringa-vbox.pkr.hcl
     }
 }
 
