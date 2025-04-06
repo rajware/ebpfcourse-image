@@ -1,8 +1,8 @@
 param(
     $VersionMajor = (property VERSION_MAJOR "1"),
     $VersionMinor = (property VERSION_MINOR "0"),
-    $BuildNumber = (property BUILD_NUMBER  "1"),
-    $PatchString = (property PATCH_NUMBER  ""),
+    $BuildNumber  = (property BUILD_NUMBER  "0"),
+    $PatchString  = (property PATCH_NUMBER  ""),
     $MatsyaSourcePath = (property MATSYA_SOURCE_PATH ""),
     $MatsyaKeyPairPath = (property MATSYA_KEYPAIR_PATH "")
 )
