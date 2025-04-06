@@ -13,26 +13,22 @@ variable "source-path" {
   default = "input/"
 }
 
-variable "source-checksum" {
+# You should use the key pair generated when the source
+# Matsya image was created. Point to the key pair file.
+variable "root-certificate" {
+  # Path to key pair file used for identifying root user
   type    = string
-  default = "sha256:"
-}
-
-variable "source-password" {
-  type      = string
-  default   = "Pass@word1"
-  sensitive = true
+  default = "keys/rootcert"
 }
 
 source "virtualbox-ovf" "bhringa-vbox" {
   source_path = "${var.source-path}"
-  checksum    = "${var.source-checksum}"
 
-  ssh_username = "user1"
-  ssh_password = "${var.source-password}"
+  ssh_username = "root"
+  ssh_private_key_file = "${var.root-certificate}"
   ssh_timeout  = "20m"
 
-  shutdown_command = "echo ${var.source-password} | sudo -S poweroff"
+  shutdown_command = "poweroff"
 
   guest_additions_mode = "disable"
 
@@ -87,8 +83,8 @@ source "virtualbox-ovf" "bhringa-vbox" {
   ]
   format = "ova"
 
-  # The output file should be called kutti-vbox.ova
-  vm_name = "bhringa-vbox"
+  # The final output file should be called Bhringa-VERSION.ova
+  vm_name = "Bhringa-${var.vm-version}"
 
   headless = true
 }
@@ -99,18 +95,25 @@ build {
   ]
 
   provisioner "shell" {
-    # The 10-setup-dev-env script sets up:
-    #   - man and linux base manpages
-    #   - llvm, lldb, clang
-    #   - kernel headers, and bpf-related libraries
-    #   - iproute2
-    #   - bpftool
-    #   - make and codeblocks IDE
     scripts = [
-      "buildscripts/10-setup-dev-env.sh"
+      "buildscripts/10-setup-dev-env.sh",
+      "buildscripts/20-set-hostname.sh",
+      "buildscripts/40-stamp-release.sh",
+      "buildscripts/50-pre-compact.sh"
     ]
-    # These scripts must be run with sudo access
-    execute_command   = "echo ${build.Password} | sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
+
+    # Ensure the VM_VERSION variable.
+    environment_vars = [
+      "VM_VERSION=${var.vm-version}"
+    ]
+  }
+
+  provisioner "file" {
+    sources = [
+      "attachments/vbox-filesystem/"
+    ]
+
+    destination = "/"
   }
 }
 
